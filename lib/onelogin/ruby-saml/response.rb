@@ -70,6 +70,14 @@ module Onelogin
           result
         end
       end
+      
+      # get a qualified attribute
+      def qualified_attribute(att_name) 
+        @name_id ||= begin
+          node = xpath_first_from_signed_assertion("/a:AttributeStatement/a:Attribute[@Name='#{att_name}']/a:AttributeValue/a:NameID")
+          node.nil? ? nil : node.attributes["NameQualifier"]+"/" + node.text
+        end
+      end 
 
       # When this user session should expire at latest
       def session_expires_at
